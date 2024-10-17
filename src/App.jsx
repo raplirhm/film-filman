@@ -20,7 +20,7 @@ function App() {
   const PopularMovieList = () => {
     return popularMovies.map((movie, i) => {
       return (
-        <div className="col">
+        <div className="col-md-3">
           <div className="card shadow-sm">
             <img
               className="bd-placeholder-img card-img-top" width="100%" preserveAspectRatio="xMidYMid slice" focusable="false"

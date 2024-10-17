@@ -67,13 +67,6 @@
   --bs-btn-active-border-color: #5a23c8;
 }
 
-.bd-mode-toggle {
-  z-index: 1500;
-}
-
-.bd-mode-toggle .dropdown-menu .active .bi {
-  display: block !important;
-}
 
 /* idk */
 .card-body span{
@@ -128,4 +121,9 @@ i {
   z-index: 1; /* Pastikan card-body tetap di atas gambar */
   background: white;
   padding: 16px; /* Atur sesuai kebutuhan */
+}
+
+.col-2{
+ scale: 0.6;
+overflow: hidden;
 }
