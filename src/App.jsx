@@ -4,10 +4,14 @@ import './App.css'
 import { getMovieList, searchMovie, getNowPlaying } from './api'
 import { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 function App() {
   const [topMovies, setTopMovies] = useState([])
   const [nowPlaying, setNowPlaying] = useState([])
+  const [searchResults, setSearchResults] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     getMovieList().then((result) => {
@@ -94,9 +98,61 @@ function App() {
   const search = async (q) => {
     if (q.length > 3) {
       const query = await searchMovie(q)
-      setTopMovies(query.results.slice(0, 18))
+      setSearchResults(query.results.slice(0, 18))
+      navigate('/search-results');
     }
   }
+
+  const MovieCard = ({ movie }) => {
+    return (
+      <div className="col-lg-2">
+        <div className="card">
+          <img
+            className="bd-placeholder-img card-img-top"
+            width="100%"
+            preserveAspectRatio="xMidYMid slice"
+            focusable="false"
+            src={`${import.meta.env.VITE_BASEIMGURL}/${movie.poster_path}`}
+            alt={movie.title}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const SearchResults = () => {
+    return (
+      <div className="album py-5 search-results" id="search-list">
+        <div className="container">
+          <h4 className='container-title'>Search Results</h4>
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {searchResults.length > 0 ? (
+              searchResults.map((movie, i) => (
+                <MovieCard key={i} movie={movie} />
+              ))
+            ) : (
+              <p>No results found.</p>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const handleKeyPress = async (event) => {
+    if (event.key === 'Enter') {
+      const query = event.target.value;
+      if (query.length > 3) {
+        search(query);
+      }
+    }
+  };
+
+  const handleIconClick = () => {
+    if (searchQuery.length > 3) {
+      search(searchQuery);
+    }
+  };
 
   return (
     <div>
@@ -107,7 +163,11 @@ function App() {
               <strong>Kino</strong>
             </a>
             <span>
-              <input type="text" placeholder="Search..." onChange={({ target }) => search(target.value)} />
+              <input
+                type="text"
+                placeholder="Search..."
+                onKeyDown={handleKeyPress}
+              />
               <i><FaSearch /></i>
             </span>
           </div>
@@ -115,23 +175,26 @@ function App() {
       </header >
 
       <main>
-
-        {/* Carousel */}
-        <NowPlaying />
-
-        {/* Popular */}
-        
-        {/* Top Rated */}
-        <div className="album py-5" id='list'>
-          <div className="container" >
-            <h4>Top Rated</h4>
-            <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-              <TopMovieList />
-            </div>
-          </div>
-        </div>
-
-      </main >
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <NowPlaying />
+                <div className="album py-5" id="list">
+                  <div className="container">
+                    <h4 className='container-title'>Top Rated</h4>
+                    <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                      <TopMovieList />
+                    </div>
+                  </div>
+                </div>
+              </>
+            }
+          />
+          <Route path="/search-results" element={<SearchResults />} />
+        </Routes>
+      </main>
 
       <footer className="text-body-secondary py-5">
         <div className="container">
