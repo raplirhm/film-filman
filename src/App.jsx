@@ -1,15 +1,19 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css'
-import { getMovieList, searchMovie, getNowPlaying } from './api'
+import { getMovieList, searchMovie, getNowPlaying, getMovieDetails } from './api'
 import { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
+import { LuDot } from "react-icons/lu";
+import { FaStar } from "react-icons/fa6";
 import { BrowserRouter as Router, Routes, Route, Link, useNavigate } from 'react-router-dom';
 
 function App() {
   const [topMovies, setTopMovies] = useState([])
   const [nowPlaying, setNowPlaying] = useState([])
   const [searchResults, setSearchResults] = useState([]);
+  const [movieDetails, setMovieDetails] = useState(null); // To store movie details
+  const [showModal, setShowModal] = useState(false); // To control modal visibility
 
   const navigate = useNavigate();
 
@@ -24,6 +28,17 @@ function App() {
       setNowPlaying(result.slice(0, 5));
     })
   }, [])
+
+  const fetchMovieDetails = async (movie_id) => {
+    const details = await getMovieDetails(movie_id);
+    setMovieDetails(details); // Store movie details in state
+    setShowModal(true); // Show the modal
+  };
+
+  const closeModal = () => {
+    setShowModal(false); // Close modal
+    setMovieDetails(null); // Clear movie details when modal is closed
+  };
 
   const NowPlaying = () => {
     return (
@@ -61,7 +76,7 @@ function App() {
                     {movie.genres.map(genre => genre.name).join(', ')}
                   </p>
                   <p>
-                    <a className="btn btn-lg btn-primary" href="#">More Info</a>
+                    <button className="info btn btn-lg btn-primary" onClick={() =>{fetchMovieDetails(movie.id)}}>More Info</button>
                   </p>
                 </div>
               </div>
@@ -148,12 +163,6 @@ function App() {
     }
   };
 
-  const handleIconClick = () => {
-    if (searchQuery.length > 3) {
-      search(searchQuery);
-    }
-  };
-
   return (
     <div>
       <header>
@@ -202,6 +211,75 @@ function App() {
         </div>
       </footer>
       <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+
+      {movieDetails && (
+        <div className={`modal fade ${showModal ? 'show d-block' : ''}`} tabIndex="-1"
+          style={{
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            minHeight: '100vh'
+          }}
+          onClick={closeModal}
+        >
+          <div className="modal-dialog modal-lg" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content">
+              <div className='modal-head'>
+                <div className="modal-title">
+                  <h1 className="modal-title">{movieDetails.title}</h1>
+                  <span className='date-runtime'>
+                    <p>{movieDetails.release_date}</p>
+                    <LuDot />
+                    <p>{movieDetails.runtime} minutes</p>
+                  </span>
+                </div>
+                <div className='modal-sub'>
+                  <FaStar />
+                  <h4 className='mb-0'>{movieDetails.vote_average.toFixed(1)}</h4>
+                  <p className='mb-0'>/10</p>
+                </div>
+              </div>
+
+              <div className="modal-body">
+                <div className="row">
+                  <div className="col-lg-3">
+                    <img
+                      src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
+                      alt={movieDetails.title}
+                      className="img-fluid"
+                      style={{
+                        height: '300px',
+                        borderRadius: '15px'
+                      }}
+                    />
+                  </div>
+                  <div className="col-lg-9">
+                    <div
+                      style={{
+                        backgroundImage: `url(https://image.tmdb.org/t/p/w1280${movieDetails.backdrop_path})`,
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        height: '300px',
+                        marginTop: '0px',
+                        width: '100%',
+                        borderRadius: '15px'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="col-md-8 modal-detail">
+                  <p>{movieDetails.genres.map(genre => genre.name).join(', ')}</p>
+                  <p>{movieDetails.overview}</p>
+                </div>
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+      )}
 
     </div >
   )

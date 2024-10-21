@@ -31,3 +31,16 @@ export const getNowPlaying = async () => {
     console.log({ nowPlayingWithGenres: moviesWithGenres });
     return moviesWithGenres; // Return the movies with genres
 }
+
+export const getMovieDetails = async (movie_id) => {
+    try {
+      const response = await axios.get(`${baseUrl}/movie/${movie_id}`, {
+        params: {
+          api_key: apiKey
+        }
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching movie details:', error);
+    }
+  };

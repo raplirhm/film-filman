@@ -247,13 +247,13 @@ i {
   font-weight: bold;
 }
 
-.carousel a{
+.info{
   background-color: white;
   color: black;
   font-size: small;
   border: 1px solid white;
 }
-.carousel a:hover{
+.info:hover{
   background: none;
   border: 1px solid white;
 }
@@ -294,4 +294,74 @@ i {
 /* footer */
 .mb-1 {
   color: white;
+}
+
+/* modal */
+.modal.fade.show {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* This ensures the modal is centered vertically */
+}
+
+
+.modal-head{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 0px;
+}
+
+.modal-title{
+  padding: 10px;
+  padding-bottom: 0px;
+  padding-top: 0px;
+}
+
+.date-runtime {
+  display: flex;
+  align-items: center;
+}
+
+.date-runtime p{
+  margin-bottom: 0px;
+}
+
+.modal-title span{
+  display: flex;
+  gap: 10px;
+  margin-left: 10px;
+  padding-bottom: 0px;
+  height: 20px;
+}
+
+.modal-sub{
+  padding: 0px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.modal-sub h4{
+  font-weight: bold;
+}
+
+.row{
+  display: flex;
+}
+
+.modal-body{
+  margin: 0px;
+}
+
+.modal-content{
+  background-color: rgb(34, 34, 34);
+  padding: 20px;
+  border-radius: 30px;
+  margin-top: 12vh;
+}
+
+.modal-detail{
+  margin-top: 20px;
 }
