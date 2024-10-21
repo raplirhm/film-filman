@@ -14,6 +14,7 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [movieDetails, setMovieDetails] = useState(null); // To store movie details
   const [showModal, setShowModal] = useState(false); // To control modal visibility
+  const [isClosing, setIsClosing] = useState(false);
 
   const navigate = useNavigate();
 
@@ -36,9 +37,20 @@ function App() {
   };
 
   const closeModal = () => {
-    setShowModal(false); // Close modal
-    setMovieDetails(null); // Clear movie details when modal is closed
+    setIsClosing(true); // Set closing state
+    setTimeout(() => {
+      setShowModal(false); // Hide the modal after animation
+      setIsClosing(false); // Reset closing state
+      setMovieDetails(null); // Clear movie details
+    }, 300); // Match the duration with CSS animation
   };
+  
+  const formatRuntime = (runtime) => {
+    const hours = Math.floor(runtime / 60); // Get the whole hours
+    const minutes = runtime % 60; // Get the remaining minutes
+    return `${hours} h ${minutes} m`;
+  };
+  
 
   const NowPlaying = () => {
     return (
@@ -76,7 +88,7 @@ function App() {
                     {movie.genres.map(genre => genre.name).join(', ')}
                   </p>
                   <p>
-                    <button className="info btn btn-lg btn-primary" onClick={() =>{fetchMovieDetails(movie.id)}}>More Info</button>
+                    <button className="info btn btn-lg btn-primary" onClick={() => { fetchMovieDetails(movie.id) }}>More Info</button>
                   </p>
                 </div>
               </div>
@@ -99,16 +111,24 @@ function App() {
   const TopMovieList = () => {
     return topMovies.map((movie, i) => {
       return (
-        <div className="col-lg-2">
+        <div className="col-lg-2" key={movie.id}>
           <div className="card">
             <img
-              className="bd-placeholder-img card-img-top" width="100%" preserveAspectRatio="xMidYMid slice" focusable="false"
-              src={`${import.meta.env.VITE_BASEIMGURL}/${movie.poster_path}`} alt="" />
+              className="bd-placeholder-img card-img-top"
+              width="100%"
+              preserveAspectRatio="xMidYMid slice"
+              focusable="false"
+              src={`${import.meta.env.VITE_BASEIMGURL}/${movie.poster_path}`}
+              alt={movie.title}
+              onClick={() => fetchMovieDetails(movie.id)} // Add this line
+              style={{ cursor: 'pointer' }} // Optional: To show it's clickable
+            />
           </div>
         </div>
-      )
-    })
-  }
+      );
+    });
+  };
+
 
   const search = async (q) => {
     if (q.length > 3) {
@@ -213,17 +233,14 @@ function App() {
       <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
       {movieDetails && (
-        <div className={`modal fade ${showModal ? 'show d-block' : ''}`} tabIndex="-1"
+        <div className={`modal fade ${showModal ? 'show d-block' : '' } ${isClosing ? 'slide-out' : ''}`} tabIndex="-1"
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            minHeight: '100vh'
+            
           }}
           onClick={closeModal}
         >
-          <div className="modal-dialog modal-lg" onClick={(e) => e.stopPropagation()}>
+          <div className="modal-dialog modal-lg shadow" onClick={(e) => e.stopPropagation()}>
             <div className="modal-content">
               <div className='modal-head'>
                 <div className="modal-title">
@@ -231,7 +248,7 @@ function App() {
                   <span className='date-runtime'>
                     <p>{movieDetails.release_date}</p>
                     <LuDot />
-                    <p>{movieDetails.runtime} minutes</p>
+                    <p>{formatRuntime(movieDetails.runtime)}</p>
                   </span>
                 </div>
                 <div className='modal-sub'>
@@ -249,6 +266,7 @@ function App() {
                       alt={movieDetails.title}
                       className="img-fluid"
                       style={{
+                        width: '250px' ,
                         height: '300px',
                         borderRadius: '15px'
                       }}

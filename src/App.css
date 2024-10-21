@@ -133,6 +133,26 @@ i {
 }
 
 /* Carousel */
+
+
+.carousel-indicators button {
+  width: 5px !important;
+  height: 5px !important;
+  border-radius: 50%; /* Makes the indicator a dot */
+  background-color: gray; /* Inactive dot color */
+  border: none;
+  margin: 0 5px;
+  outline: 0px !important;
+  transition: all 0.4s ease !important; /* Smooth transition when state changes */
+}
+
+.carousel-indicators .active {
+  width: 40px !important; /* Make it longer to appear as a line */
+  height: 5px !important; /* Thin line */
+  border-radius: 5px;
+  background-color: white; /* Active line color */
+}
+
 .bd-placeholder-img {
   font-size: 1.125rem;
   text-anchor: middle;
@@ -301,7 +321,7 @@ i {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh; /* This ensures the modal is centered vertically */
+  min-height: 100vh; 
 }
 
 
@@ -316,11 +336,13 @@ i {
   padding: 10px;
   padding-bottom: 0px;
   padding-top: 0px;
+  line-height: 50px;
 }
 
 .date-runtime {
   display: flex;
   align-items: center;
+  margin-top: 10px;
 }
 
 .date-runtime p{
@@ -359,9 +381,52 @@ i {
   background-color: rgb(34, 34, 34);
   padding: 20px;
   border-radius: 30px;
-  margin-top: 12vh;
+  animation: slideInFromTop 0.3s ease;
+}
+
+.modal-dialog {
+  width: 1000px;
+  max-width: 1200px;
 }
 
 .modal-detail{
   margin-top: 20px;
+}
+
+.modal-detail p {
+  width: 920px;
+}
+
+@keyframes slideInFromTop {
+  from {
+    transform: translateY(-100%); 
+    opacity: 0; 
+  }
+  to {
+    transform: translateY(0); 
+    opacity: 1; 
+  }
+}
+
+
+@keyframes slideOutToTop {
+  from {
+    transform: translateY(0); 
+    opacity: 1; 
+    visibility: visible;
+  }
+  to {
+    transform: translateY(-100%); 
+    opacity: 0; 
+    visibility: hidden;
+  }
+}
+
+
+.modal.fade {
+  transition: opacity 0.3s ease; 
+}
+
+.slide-out {
+  animation: slideOutToTop 0.3s ease forwards; 
 }
