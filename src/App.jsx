@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import './App.css'
-import { getMovieList, searchMovie, getNowPlaying, getMovieDetails } from './api'
+import { getMovieList, searchMovie, getNowPlaying, getMovieDetails, getPopularMovies, getUpcomingMovies } from './api'
 import { useEffect, useState } from 'react';
 import { FaSearch } from "react-icons/fa";
 import { LuDot } from "react-icons/lu";
@@ -44,13 +44,13 @@ function App() {
       setMovieDetails(null); // Clear movie details
     }, 300); // Match the duration with CSS animation
   };
-  
+
   const formatRuntime = (runtime) => {
     const hours = Math.floor(runtime / 60); // Get the whole hours
     const minutes = runtime % 60; // Get the remaining minutes
     return `${hours} h ${minutes} m`;
   };
-  
+
 
   const NowPlaying = () => {
     return (
@@ -183,6 +183,147 @@ function App() {
     }
   };
 
+  const PopularMovies = () => {
+    const [popularMovies, setPopularMovies] = useState([]);
+
+    useEffect(() => {
+      // Fetch popular movies from your API
+      getPopularMovies().then((result) => {
+        setPopularMovies(result.slice(0, 18)); // Fetch the first 12 popular movies
+      });
+    }, []);
+
+    const moviesPerSlide = 6; // Number of movies per slide
+
+    // Function to split movies into chunks for each slide
+    const chunkMovies = (movies, size) => {
+      const chunks = [];
+      for (let i = 0; i < movies.length; i += size) {
+        chunks.push(movies.slice(i, i + size));
+      }
+      return chunks;
+    };
+
+    const movieChunks = chunkMovies(popularMovies, moviesPerSlide);
+
+    return (
+      <div className='container-multi'>
+        <div id="multiItemCarousel" className="carousel slide multi" data-bs-ride="carousel">
+          <div className="carousel-inner">
+            {movieChunks.map((chunk, slideIndex) => (
+              <div key={slideIndex} className={`carousel-item ${slideIndex === 0 ? 'active' : ''}`}>
+                <div className="row multi-row">
+                  {chunk.map((movie) => (
+                    <div className="col-lg-2 multi-card" key={movie.id}>
+                      <div className="card">
+                        <img
+                          className="bd-placeholder-img card-img-top"
+                          width="100%"
+                          src={`${import.meta.env.VITE_BASEIMGURL}/${movie.poster_path}`}
+                          alt={movie.title}
+                          onClick={() => fetchMovieDetails(movie.id)}
+                          style={{
+                            cursor: 'pointer',
+                            width: '202.66px', // Same width as in TopMovieList
+                            height: '300px', // Adjust height to match TopMovieList
+                            objectFit: 'cover', // Ensure images are scaled properly
+                            padding: '0px'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='prevnext'>
+            <button className="carousel-control-prev prev" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button className="carousel-control-next next" type="button" data-bs-target="#multiItemCarousel" data-bs-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
+  const UpcomingMovies = () => {
+    const [upcomingMovies, setUpcomingMovies] = useState([]);
+
+    useEffect(() => {
+      // Fetch popular movies from your API
+      getUpcomingMovies().then((result) => {
+        setUpcomingMovies(result.slice(0, 18)); // Fetch the first 12 popular movies
+      });
+    }, []);
+
+    const moviesPerSlide = 6; // Number of movies per slide
+
+    // Function to split movies into chunks for each slide
+    const chunkMovies = (movies, size) => {
+      const chunks = [];
+      for (let i = 0; i < movies.length; i += size) {
+        chunks.push(movies.slice(i, i + size));
+      }
+      return chunks;
+    };
+
+    const movieChunks = chunkMovies(upcomingMovies, moviesPerSlide);
+
+    return (
+      <div className='container-multi'>
+        <div id="multiItemCarousel2" className="carousel slide multi" data-bs-ride="carousel">
+          <div className="carousel-inner">
+            {movieChunks.map((chunk, slideIndex) => (
+              <div key={slideIndex} className={`carousel-item ${slideIndex === 0 ? 'active' : ''} upcoming`}>
+                <div className="row multi-row">
+                  {chunk.map((movie) => (
+                    <div className="col-lg-2 multi-card" key={movie.id}>
+                      <div className="card">
+                        <img
+                          className="bd-placeholder-img card-img-top"
+                          width="100%"
+                          src={`${import.meta.env.VITE_BASEIMGURL}/${movie.poster_path}`}
+                          alt={movie.title}
+                          onClick={() => fetchMovieDetails(movie.id)}
+                          style={{
+                            cursor: 'pointer',
+                            width: '202.66px', // Same width as in TopMovieList
+                            height: '300px', // Adjust height to match TopMovieList
+                            objectFit: 'cover', // Ensure images are scaled properly
+                            padding: '0px'
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className='prevnext'>
+            <button className="carousel-control-prev prev" type="button" data-bs-target="#multiItemCarousel2" data-bs-slide="prev">
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Previous</span>
+            </button>
+            <button className="carousel-control-next next" type="button" data-bs-target="#multiItemCarousel2" data-bs-slide="next">
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Next</span>
+            </button>
+          </div>
+
+        </div>
+      </div>
+    );
+  };
+
+
   return (
     <div>
       <header>
@@ -210,7 +351,15 @@ function App() {
             element={
               <>
                 <NowPlaying />
-                <div className="album py-5" id="list">
+                <div className='container'>
+                  <h4 className='container-title'>Trending</h4>
+                  <PopularMovies />
+                </div>
+                <div className='container'>
+                  <h4 className='container-title'>Upcoming</h4>
+                  <UpcomingMovies />
+                </div>
+                <div className="album" id="list">
                   <div className="container">
                     <h4 className='container-title'>Top Rated</h4>
                     <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
@@ -233,10 +382,10 @@ function App() {
       <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
 
       {movieDetails && (
-        <div className={`modal fade ${showModal ? 'show d-block' : '' } ${isClosing ? 'slide-out' : ''}`} tabIndex="-1"
+        <div className={`modal fade ${showModal ? 'show d-block' : ''} ${isClosing ? 'slide-out' : ''}`} tabIndex="-1"
           style={{
             backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            
+
           }}
           onClick={closeModal}
         >
@@ -266,7 +415,7 @@ function App() {
                       alt={movieDetails.title}
                       className="img-fluid"
                       style={{
-                        width: '250px' ,
+                        width: '250px',
                         height: '300px',
                         borderRadius: '15px'
                       }}

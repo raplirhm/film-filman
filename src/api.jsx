@@ -9,6 +9,16 @@ export const getMovieList = async () => {
     return movie.data.results
 }
 
+export const getPopularMovies = async () => {
+    const movie = await axios.get(`${baseUrl}/movie/popular?api_key=${apiKey}`);
+    return movie.data.results
+}
+
+export const getUpcomingMovies = async () => {
+    const movie = await axios.get(`${baseUrl}/movie/upcoming?api_key=${apiKey}`);
+    return movie.data.results
+}
+
 export const searchMovie = async (q) => {
     const search = await axios.get(`${baseUrl}/search/movie?query=${q}&api_key=${apiKey}`)
     return search.data

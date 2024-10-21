@@ -279,8 +279,43 @@ i {
 }
 
 /* Popular */
+.prev {
+  position: absolute;
+  width: 80px;
+  right: 100px
+}
 
+.next {
+  position: absolute;
+  width: 80px;
+}
 
+.container-multi{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.multi{
+  width: 1326px;
+  height: 300px;
+}
+
+.multi-row {
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.multi-card {
+  width: 202.66px;
+  height: 300px;
+  padding: 0px;
+}
+
+.carousel-item {
+  height: 300px;
+}
 
 /* content */
 .card {
@@ -309,6 +344,7 @@ i {
 
 .container-title {
   margin-bottom: 30px;
+  width: 1326px;
 }
 
 /* footer */
