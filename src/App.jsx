@@ -81,7 +81,7 @@ function App() {
                 height: '100vh'
               }}
             >
-              <div className="container">
+              <div className="container-carousel">
                 <div className="carousel-caption text-start">
                   <h1>{movie.title}</h1>
                   <p>
