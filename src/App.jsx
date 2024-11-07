@@ -140,7 +140,7 @@ function App() {
 
   const MovieCard = ({ movie }) => {
     return (
-      <div className="col-lg-2">
+      <div className="col-lg-2" onClick={() => fetchMovieDetails(movie.id)}>
         <div className="card">
           <img
             className="bd-placeholder-img card-img-top"
